@@ -1,0 +1,7 @@
+{
+	"name": "commantor",
+	"dependencies": {
+		"@types/bun": "^1.1.12",
+		"@types/node": "^22.7.9"
+	}
+}
