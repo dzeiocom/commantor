@@ -57,10 +57,10 @@ export async function getCommands(basePath: string): Promise<Array<{ path: strin
 	try {
 		dir = __dirname
 	} catch {
-		dir = import.meta.dir
+		dir = import.meta.dirname
 	}
 	if (!dir) {
-		throw new Error('the current directory is not obtainable through __dirname or import.meta.dir :(')
+		throw new Error('the current directory is not obtainable through __dirname or import.meta.dirname :(')
 	}
 	const files = (await listfiles(basePath))
 		.map(async (it) => ({
