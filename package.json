@@ -1,7 +1,13 @@
 {
 	"name": "commantor",
-	"dependencies": {
+	"version": "0.0.4",
+	"devDependencies": {
 		"@types/bun": "^1.1.12",
 		"@types/node": "^22.7.9"
-	}
+	},
+	"exports": "./src/index.ts",
+	"types": "./src/index.ts",
+	"files": [
+		"src"
+	]
 }

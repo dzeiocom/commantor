@@ -1,13 +1,11 @@
 #!/usr/bin/env bun
 /**
- * This file is a shortcut to `src/commands/index.ts`
+ * Initialize Commantor for a terminal usage
  *
- * It allows you to run commands that will change things in the codebase
- *
- * to start, run `./cmd.ts`
+ * Simply run `./cmd.ts` to check it out !
  */
-import Commador from './src'
+import commantor from './src'
 
-void Commador({
+void commantor({
 	path: './commands',
 })

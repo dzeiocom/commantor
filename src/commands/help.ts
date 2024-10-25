@@ -1,4 +1,4 @@
-import { Command } from "."
+import { Command } from ".."
 
 export default {
 	name: 'help',
