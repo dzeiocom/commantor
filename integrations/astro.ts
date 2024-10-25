@@ -35,7 +35,7 @@ const integration: (params?: Params) => AstroIntegration = (initCtx) => ({
 			config = eval('const t = ' + test.slice(test.indexOf('{'), test.lastIndexOf('}') + 1) + ';t') as typeof config
 
 			// load commands into commantor
-			await commantor.loadCommands(path.resolve(path.dirname(import.meta.dirname), config.path))
+			await commantor.loadCommands(path.resolve(process.cwd(), config.path))
 
 			// run the first hook
 			await runHook('astro:config:setup')
