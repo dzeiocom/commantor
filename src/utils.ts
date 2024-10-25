@@ -62,10 +62,21 @@ export async function getCommands(basePath: string): Promise<Array<{ path: strin
 	if (!dir) {
 		throw new Error('the current directory is not obtainable through __dirname or import.meta.dirname :(')
 	}
-	const files = (await listfiles(basePath))
-		.map(async (it) => ({
-			path: it,
-			cmd: await import(path.relative(dir, it)).then((it) => it.default)
-		}))
-	return await Promise.all(files)
+	const res: Awaited<ReturnType<typeof getCommands>> = []
+	for (const file of await listfiles(basePath)) {
+		console.log('loading', file)
+
+		try {
+			const imported = await import(path.relative(dir, file)).then((it) => it.default)
+
+			res.push({
+				path: file,
+				cmd: imported
+			})
+		} catch (e) {
+			console.error(e)
+			console.error('couldn\'t load command from', file)
+		}
+	}
+	return res
 }
