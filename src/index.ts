@@ -6,7 +6,7 @@ import { Options } from './interfaces'
  * Command Director = Commantor
  * @param opts The options to specify how the
  */
-export default async function (options: { path: string } & Options) {
+export default async function <Hooks extends string>(options: { path: string, hooks?: Partial<Record<Hooks, Array<string> | string>> } & Options) {
 	const commantor = new Commantor(options)
 	await commantor.loadCommands(path.resolve(process.cwd(), options.path))
 

@@ -4,6 +4,12 @@
  */
 export interface Options { }
 
+export type AstroHooks = 'astro:config:setu' | 'astro:config:done' |
+	'astro:server:setup' | 'astro:server:start' |
+	'astro:server:done' | 'astro:build:start' |
+	'astro:build:setup' | 'astro:build:generated' |
+	'astro:build:ssr' | 'astro:build:done'
+
 /**
  * The context given the the command
  */

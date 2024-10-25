@@ -4,8 +4,8 @@
  *
  * Simply run `./cmd.ts` to check it out !
  */
-import commantor from './src'
+import commantor, { AstroHooks } from './src'
 
-void commantor({
-	path: './commands',
+void commantor<AstroHooks>({
+	path: './commands'
 })
