@@ -53,10 +53,19 @@ export async function listfiles(folder: string): Promise<Array<string>> {
 }
 
 export async function getCommands(basePath: string): Promise<Array<{ path: string, cmd: Command }>> {
+	let dir: string
+	try {
+		dir = __dirname
+	} catch {
+		dir = import.meta.dir
+	}
+	if (!dir) {
+		throw new Error('the current directory is not obtainable through __dirname or import.meta.dir :(')
+	}
 	const files = (await listfiles(basePath))
 		.map(async (it) => ({
 			path: it,
-			cmd: await import(path.relative(__dirname, it)).then((it) => it.default)
+			cmd: await import(path.relative(dir, it)).then((it) => it.default)
 		}))
 	return await Promise.all(files)
 }
