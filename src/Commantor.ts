@@ -1,15 +1,25 @@
 import codegen from './commands/code/generate';
 import help from './commands/help';
 import type { Command, CommandResponse, Context, LoadedCommand, Options } from './interfaces';
-import { parseParams } from './utils';
+import { getCommands, parseParams } from './utils';
 
 export default class Commantor {
+	// the loaded commands
 	private commands: Array<LoadedCommand> = [
 		help,
 		codegen
 	]
-	public constructor(opts: Options) {
 
+	public constructor(public readonly options: Options) { }
+
+	/**
+	 * Load commands from a specific folder and subfolders
+	 */
+	public async loadCommands(basePath: string) {
+		const cmds = await getCommands(basePath)
+		for (const cmd of cmds) {
+			this.addCommand(cmd.cmd, cmd.path)
+		}
 	}
 
 	public addCommand(cmd: Command, path?: string) {
