@@ -1,6 +1,6 @@
-import path from 'node:path/posix'
+import path from 'node:path'
 import Commantor from './Commantor'
-import { Options } from './interfaces'
+import type { Options } from './interfaces'
 
 /**
  * Command Director = Commantor
@@ -8,7 +8,7 @@ import { Options } from './interfaces'
  */
 export default async function <Hooks extends string>(options: { path: string, hooks?: Partial<Record<Hooks, Array<string> | string>> } & Options) {
 	const commantor = new Commantor(options)
-	await commantor.loadCommands(path.resolve(process.cwd(), options.path))
+	await commantor.loadCommands(path.resolve(process.cwd(), options.path), options)
 
 	const res = await commantor.run(process.argv.slice(2))
 	process.exit(res.code)

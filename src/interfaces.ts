@@ -2,7 +2,9 @@
 /**
  * The options given to startup the library
  */
-export interface Options { }
+export interface Options {
+	debug?: boolean
+ }
 
 export type AstroHooks = 'astro:config:setu' | 'astro:config:done' |
 	'astro:server:setup' | 'astro:server:start' |
@@ -32,6 +34,8 @@ export interface Context extends Options {
 	 * the current working directory
 	 */
 	cwd: string
+
+	logger: Record<'info' | 'log' | 'warn' | 'err' | 'debug' | 'error', (...params: Parameters<typeof console.log>) => void>
 }
 
 /**
@@ -57,5 +61,5 @@ export interface LoadedCommand extends Command {
 	/**
 	 * The absolute path of the command file
 	 */
-	path?: string
+	path?: string | undefined
 }

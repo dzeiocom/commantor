@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
-import path from 'node:path/posix'
-import { Command } from './interfaces'
+import path from 'node:path'
+import type { Command, Options } from './interfaces'
 
 export function parseParams(items: Array<string>): {
 	params: Array<string>
@@ -17,7 +17,7 @@ export function parseParams(items: Array<string>): {
 			currKey = item.slice(item.at(1) === '-' ? 2 : 1)
 			if (currKey.includes('=')) {
 				const [key, value] = currKey.split('=')
-				options[key] = value
+				options[key as string] = value as string
 				currKey = null
 			}
 		} else if (currKey) {
@@ -42,17 +42,17 @@ export async function listfiles(folder: string): Promise<Array<string>> {
 	const files = await fs.readdir(folder)
 	const res: Array<string> = []
 	for (const file of files) {
-		const path = `${folder}/${file}`
-		if ((await fs.stat(path)).isDirectory()) {
-			res.push(...(await listfiles(path)))
+		const item = `${folder}${path.sep}${file}`
+		if ((await fs.stat(item)).isDirectory()) {
+			res.push(...(await listfiles(item)))
 		} else {
-			res.push(path)
+			res.push(item)
 		}
 	}
 	return res
 }
 
-export async function getCommands(basePath: string): Promise<Array<{ path: string, cmd: Command }>> {
+export async function getCommands(basePath: string, opts?: Options): Promise<Array<{ path: string, cmd: Command }>> {
 	let dir: string
 	try {
 		dir = __dirname
@@ -64,7 +64,9 @@ export async function getCommands(basePath: string): Promise<Array<{ path: strin
 	}
 	const res: Awaited<ReturnType<typeof getCommands>> = []
 	for (const file of await listfiles(basePath)) {
-		console.log('loading', file)
+		if (opts?.debug) {
+			console.log('debug: loading', file)
+		}
 
 		try {
 			const imported = await import(path.relative(dir, file)).then((it) => it.default)
@@ -74,8 +76,10 @@ export async function getCommands(basePath: string): Promise<Array<{ path: strin
 				cmd: imported
 			})
 		} catch (e) {
-			console.error(e)
-			console.error('couldn\'t load command from', file)
+			if (opts?.debug) {
+				console.error('debug:', e)
+				console.error('debug: couldn\'t load command from', file)
+			}
 		}
 	}
 	return res
