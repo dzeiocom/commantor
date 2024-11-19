@@ -33,10 +33,11 @@ export default class Commantor {
 	}
 
 	public async run(args: Array<string> | string): Promise<CommandResponse> {
-		const ctx = this.createContext(typeof args === 'string' ? args.split(' ') : args)
+		args = typeof args === 'string' ? args.split(' ') : args
 
-		for (const command of ctx.commands) {
-			if (command.name === ctx.command) {
+		for (const command of this.commands) {
+			if (command.name === (args[0] ?? 'help')) {
+				const ctx = this.createContext(args, command)
 				ctx.logger.debug('--------- Init End ---------')
 				ctx.logger.debug('------ Command Start -------')
 				ctx.logger.debug('running command:', command.name)
@@ -47,7 +48,7 @@ export default class Commantor {
 		}
 
 		console.log(
-			`command "${ctx.command}" not found, please use "help" to get the list of commands`,
+			`command "${args[0]}" not found, please use "help" to get the list of commands`,
 		)
 
 		return {
@@ -55,8 +56,8 @@ export default class Commantor {
 		}
 	}
 
-	private createContext(command: Array<string>): Context {
-		const { params, options } = parseParams(command)
+	private createContext(text: Array<string>, command: Command): Context {
+		const { params, options } = parseParams(text, command.params)
 		const baseLogger = (level: 'log' | 'warn' | 'error' | 'debug' | 'info') => (...params: Parameters<typeof console.log>) => {
 			if (level === 'debug' && !this.options.debug) {
 				return

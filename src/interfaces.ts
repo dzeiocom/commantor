@@ -20,7 +20,7 @@ export interface Context extends Options {
 	 * The list of arguments given by the client
 	 */
 	args: Array<string>
-	params: Record<string, string | boolean>
+	params: Record<string, string | true | Array<string>>
 	/**
 	 * The list of detected commands in the repo
 	 */
@@ -52,6 +52,8 @@ export interface Command {
 		name: string
 		aliases?: Array<string>
 		description?: string
+		multiple?: boolean
+		valueOptional?: boolean
 		value?: 'string' | 'boolean' | 'number'
 	}>
 	run(input: Context): Promise<CommandResponse> | CommandResponse
