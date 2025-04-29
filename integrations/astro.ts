@@ -1,7 +1,7 @@
 import type { AstroIntegration } from 'astro'
 import { Commantor, type Options } from 'commantor'
 import fs from 'node:fs/promises'
-import path from 'node:path/posix'
+import path from 'node:path'
 
 const commantor = new Commantor({})
 let config: Options & { path: string, hooks?: Record<string, Array<string> | string> }
@@ -35,7 +35,7 @@ const integration: (params?: Params) => AstroIntegration = (initCtx) => ({
 			config = eval('const t = ' + test.slice(test.indexOf('{'), test.lastIndexOf('}') + 1) + ';t') as typeof config
 
 			// load commands into commantor
-			await commantor.loadCommands(path.resolve(process.cwd(), config.path), config)
+			await commantor.loadCommands(path.resolve(process.cwd(), config.path).replace(/\\/, '/'), config)
 
 			// run the first hook
 			await runHook('astro:config:setup')
